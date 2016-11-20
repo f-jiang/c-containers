@@ -1,6 +1,5 @@
 #include "list.h"
 
-#include <stdbool.h>    // bool
 #include <stdlib.h>     // malloc(), free()
 #include <string.h>     // memcpy()
 
