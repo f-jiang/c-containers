@@ -69,7 +69,7 @@ void vector_pop_back(vector * const v) {
 
 void vector_fill(vector * const v, void *val) {
     void *p = v->data;
-    void *end = vector_get(v, v->len - 1);
+    void *end = v->data + v->elem_size * v->len;
     while (p != end) {
         memcpy(p, val, v->elem_size);
         p += v->elem_size;
