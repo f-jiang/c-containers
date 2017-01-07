@@ -38,14 +38,8 @@ static void node_del(struct node_t *n) {
 
 static void tree_del(struct node_t *root) {
     if (root != NULL) {
-        if (root->left != NULL) {
-            tree_del(root->left);
-        }
-
-        if (root->right != NULL) {
-            tree_del(root->right);
-        }
-
+        tree_del(root->left);
+        tree_del(root->right);
         node_del(root);
     }
 }
