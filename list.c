@@ -34,8 +34,10 @@ static struct node_t *get_node(const list * const l, size_t index) {
 }
 
 static void node_del(struct node_t *n) {
-    free(n->val);
-    free(n);
+    if (n != NULL) {
+        free(n->val);
+        free(n);
+    }
 }
 
 list *list_init(size_t elem_size) {
@@ -47,16 +49,18 @@ list *list_init(size_t elem_size) {
 }
 
 void list_del(list **l) {
-    struct node_t *cur = (*l)->front;
+    if (*l != NULL) {
+        struct node_t *cur = (*l)->front;
 
-    while ((*l)->len-- > 0) {
-        (*l)->front = (*l)->front->next;
-        node_del(cur);
-        cur = (*l)->front;
+        while ((*l)->len-- > 0) {
+            (*l)->front = (*l)->front->next;
+            node_del(cur);
+            cur = (*l)->front;
+        }
+
+        free(*l);
+        *l = NULL;
     }
-
-    free(*l);
-    *l = NULL;
 }
 
 size_t list_get_len(const list * const l) {

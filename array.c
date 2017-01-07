@@ -18,9 +18,11 @@ array *array_init(size_t elem_size, size_t len) {
 }
 
 void array_del(array **a) {
-    free((*a)->data);
-    free(*a);
-    *a = NULL;
+    if (*a != NULL) {
+        free((*a)->data);
+        free(*a);
+        *a = NULL;
+    }
 }
 
 size_t array_get_len(const array * const a) {

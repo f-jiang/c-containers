@@ -37,9 +37,11 @@ vector *vector_init(size_t elem_size) {
 }
 
 void vector_del(vector **v) {
-    free((*v)->data);
-    free(*v);
-    *v = NULL;
+    if (*v != NULL) {
+        free((*v)->data);
+        free(*v);
+        *v = NULL;
+    }
 }
 
 size_t vector_get_len(const vector * const v) {
