@@ -1,0 +1,17 @@
+//remove malloc casts
+//verify void * values are dereferenced when needed
+//in static functions, replace node with struct node_t (ie remove typedef)
+//add static keyword to functions between comment markers
+//create a del function for node_t
+//implement comparator
+//rename cur to root where appropriate (see node internal functions)
+//set ptr to NULL after free() if needed
+improve handling of non-existent/redundant set values that are passed into fns
+repeated code
+
+//spacing and consistency with existing code
+
+FOR ALL:
+- NULL container causes crash
+- empty container doesn't
+make the above two consistnet
