@@ -100,17 +100,19 @@ static bool add_node(oset * const s, struct node_t *root, void *val) {
 
 static bool remove_node(oset * const s, struct node_t *root, void *val) {
     struct node_t *remove = get_node(s, root, val);
-    struct node_t *parent = remove->parent;
+    struct node_t *parent = (remove == NULL) ? NULL : remove->parent;
 
     if (remove == NULL) {
         return false;
     } else if (remove->left == NULL && remove->right == NULL) {    // no children
         if (parent != NULL) {
-            if (remove->val < parent->val) {
+            if ((*s->comp)(remove->val, parent->val) < 0) {
                 parent->left = NULL;
             } else {
                 parent->right = NULL;
             }
+        } else {
+            s->data = NULL;
         }
 
         node_del(remove);
@@ -119,12 +121,15 @@ static bool remove_node(oset * const s, struct node_t *root, void *val) {
     } else if (remove->right == NULL) {    // only has left child
         if (parent == NULL) {
             s->data = remove->left;
+            s->data->parent = NULL;
         } else {
-            if (remove->val < parent->val) {
+            if ((*s->comp)(remove->val, parent->val) < 0) {
                 parent->left = remove->left;
             } else {
                 parent->right = remove->left;
             }
+
+            remove->left->parent = parent;
         }
 
         node_del(remove);
@@ -133,12 +138,15 @@ static bool remove_node(oset * const s, struct node_t *root, void *val) {
     } else if (remove->left == NULL) {    // only has right child
         if (parent == NULL) {
             s->data = remove->right;
+            s->data->parent = NULL;
         } else {
-            if (remove->val < parent->val) {
+            if ((*s->comp)(remove->val, parent->val) < 0) {
                 parent->left = remove->right;
             } else {
                 parent->right = remove->right;
             }
+
+            remove->right->parent = parent;
         }
 
         node_del(remove);
