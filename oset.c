@@ -55,7 +55,7 @@ static struct node_t *get_node(const oset * const s, struct node_t *root, void *
 }
 
 static struct node_t *get_min_node(struct node_t *root) {
-    if (root->left == NULL) {
+    if (root == NULL || root->left == NULL) {
         return root;
     } else {
         return get_min_node(root->left);
@@ -63,7 +63,7 @@ static struct node_t *get_min_node(struct node_t *root) {
 }
 
 static struct node_t *get_max_node(struct node_t *root) {
-    if (root->right== NULL) {
+    if (root == NULL || root->right== NULL) {
         return root;
     } else {
         return get_max_node(root->right);
@@ -184,11 +184,13 @@ size_t oset_get_count(const oset * const s) {
 }
 
 void *oset_first(const oset * const s) {
-    return get_min_node(s->data)->val;
+    struct node_t *first = get_min_node(s->data);
+    return (first == NULL) ? NULL : first->val; 
 }
 
 void *oset_last(const oset * const s) {
-    return get_max_node(s->data)->val;
+    struct node_t *last = get_max_node(s->data);
+    return (last == NULL) ? NULL : last->val; 
 }
 
 void *oset_lower(const oset * const s, void *val) {
@@ -197,7 +199,7 @@ void *oset_lower(const oset * const s, void *val) {
 
     if (n == get_min_node(s->data)) {
         pr = NULL;
-    } else if (n->left== NULL) {
+    } else if (n->left == NULL) {
         bool done = false;
         do {
             pr = n->parent;
