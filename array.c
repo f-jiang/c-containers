@@ -34,7 +34,7 @@ void array_set(array * const a, size_t index, void *val) {
 }
 
 void *array_get(const array * const a, size_t index) {
-    if (index < a->len) {
+    if (index < a->len && index > -1) {
         return a->data + a->elem_size * index;
     } else {
         return NULL;

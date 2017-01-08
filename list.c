@@ -76,7 +76,8 @@ void list_set(list * const l, size_t index, void *val) {
 }
 
 void *list_get(const list * const l, size_t index) {
-    return get_node(l, index)->val;
+    struct node_t *n = get_node(l, index);
+    return (n == NULL) ? NULL : n->val;
 }
 
 void *list_front(const list * const l) {
