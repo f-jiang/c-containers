@@ -32,6 +32,6 @@
 *.dSYM/
 *.su
 
-main.c
-exec
+test.c
+test
 Makefile
