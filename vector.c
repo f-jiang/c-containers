@@ -53,7 +53,7 @@ void vector_set(vector * const v, size_t index, void *val) {
 }
 
 void *vector_get(const vector * const v, size_t index) {
-    if (index < v->len && index > -1) {
+    if (index < v->len) {
         return v->data + v->elem_size * index;
     } else {
         return NULL;
