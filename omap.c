@@ -90,7 +90,7 @@ static bool add_node(omap * const m, struct node_t *root, void *key, void *val) 
         } else {
             add_node(m, root->left, key, val);
         }
-    } else if ((*m->comp)(root->val, val) < 0) {
+    } else if ((*m->comp)(root->key, key) < 0) {
         if (root->right == NULL) {
             root->right = node_init(m, key, val);
             root->right->parent = root;
