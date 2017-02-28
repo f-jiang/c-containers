@@ -277,6 +277,26 @@ pair *omap_higher(const omap * const m, void *key) {
     return p;
 }
 
+void *omap_first_key(const omap * const m) {
+    pair *p = omap_first(m);
+    return (p == NULL) ? NULL : p->key;
+}
+
+void *omap_last_key(const omap * const m) {
+    pair *p = omap_last(m);
+    return (p == NULL) ? NULL : p->key;
+}
+
+void *omap_lower_key(const omap * const m, void *key) {
+    pair *p = omap_lower(m, key);
+    return (p == NULL) ? NULL : p->key;
+}
+
+void *omap_higher_key(const omap * const m, void *key) {
+    pair *p = omap_higher(m, key);
+    return (p == NULL) ? NULL : p->key;
+}
+
 bool omap_insert(omap * const m, void *key, void *val) {
     return add_node(m, m->data, key, val);
 }
