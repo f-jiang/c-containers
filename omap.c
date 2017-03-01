@@ -277,6 +277,7 @@ pair *omap_higher(const omap * const m, void *key) {
     return p;
 }
 
+// BUG all fns with pair: p not being freed
 void *omap_first_key(const omap * const m) {
     pair *p = omap_first(m);
     return (p == NULL) ? NULL : p->key;
