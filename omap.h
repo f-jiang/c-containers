@@ -11,7 +11,7 @@ typedef struct ordered_map_t omap;
 omap *omap_init(size_t key_size, size_t val_size, int (*comp)(void *a, void *b));
 void omap_del(omap **m);
 
-size_t omap_get_count(const omap * const s);
+size_t omap_get_count(const omap * const m);
 
 bool omap_insert(omap * const m, void *key, void *val);
 bool omap_remove(omap * const m, void *key);
