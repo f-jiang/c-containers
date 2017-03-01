@@ -76,6 +76,46 @@ static struct node_t *get_max_node(struct node_t *root) {
     }
 }
 
+static struct node_t *get_prev_node(const omap * const m, struct node_t *root, void *key) {
+    struct node_t *n = get_node(m, m->data, key);
+    struct node_t *pr;
+
+    if (n == get_min_node(m->data)) {
+        pr = NULL;
+    } else if (n->left == NULL) {
+        bool done = false;
+        do {
+            pr = n->parent;
+            done = (n == pr->right);
+            n = pr;
+        } while (!done);
+    } else {
+        pr = get_max_node(n->left);
+    }
+
+    return pr;
+}
+
+static struct node_t *get_next_node(const omap * const m, struct node_t *root, void *key) {
+    struct node_t *n = get_node(m, m->data, key);
+    struct node_t *sc;
+
+    if (n == get_max_node(m->data)) {
+        sc = NULL;
+    } else if (n->right == NULL) {
+        bool done = false;
+        do {
+            sc = n->parent;
+            done = (n == sc->left);
+            n = sc;
+        } while (!done);
+    } else {
+        sc = get_min_node(n->right);
+    }
+
+    return sc;
+}
+
 static bool add_node(omap * const m, struct node_t *root, void *key, void *val) {
     if (m->count == 0) {
         m->data = node_init(m, key, val);
@@ -222,22 +262,7 @@ pair *omap_last(const omap * const m) {
 }
 
 pair *omap_lower(const omap * const m, void *key) {
-    struct node_t *n = get_node(m, m->data, key);
-    struct node_t *pr;
-
-    if (n == get_min_node(m->data)) {
-        pr = NULL;
-    } else if (n->left == NULL) {
-        bool done = false;
-        do {
-            pr = n->parent;
-            done = (n == pr->right);
-            n = pr;
-        } while (!done);
-    } else {
-        pr = get_max_node(n->left);
-    }
-
+    struct node_t *pr = get_prev_node(m, m->data, key);
     struct pair_t *p = NULL;
 
     if (pr != NULL) {
@@ -250,22 +275,7 @@ pair *omap_lower(const omap * const m, void *key) {
 }
 
 pair *omap_higher(const omap * const m, void *key) {
-    struct node_t *n = get_node(m, m->data, key);
-    struct node_t *sc;
-
-    if (n == get_max_node(m->data)) {
-        sc = NULL;
-    } else if (n->right == NULL) {
-        bool done = false;
-        do {
-            sc = n->parent;
-            done = (n == sc->left);
-            n = sc;
-        } while (!done);
-    } else {
-        sc = get_min_node(n->right);
-    }
-
+    struct node_t *sc = get_next_node(m, m->data, key);
     struct pair_t *p = NULL;
 
     if (sc != NULL) {
@@ -277,25 +287,24 @@ pair *omap_higher(const omap * const m, void *key) {
     return p;
 }
 
-// BUG all fns with pair: p not being freed
 void *omap_first_key(const omap * const m) {
-    pair *p = omap_first(m);
-    return (p == NULL) ? NULL : p->key;
+    struct node_t *first = get_min_node(m->data);
+    return (first == NULL) ? NULL : first->key;
 }
 
 void *omap_last_key(const omap * const m) {
-    pair *p = omap_last(m);
-    return (p == NULL) ? NULL : p->key;
+    struct node_t *last = get_max_node(m->data);
+    return (last == NULL) ? NULL : last->key;
 }
 
 void *omap_lower_key(const omap * const m, void *key) {
-    pair *p = omap_lower(m, key);
-    return (p == NULL) ? NULL : p->key;
+    struct node_t *pr = get_prev_node(m, m->data, key);
+    return (pr == NULL) ? NULL : pr->key;
 }
 
 void *omap_higher_key(const omap * const m, void *key) {
-    pair *p = omap_higher(m, key);
-    return (p == NULL) ? NULL : p->key;
+    struct node_t *sc = get_next_node(m, m->data, key);
+    return (sc == NULL) ? NULL : sc->key;
 }
 
 bool omap_insert(omap * const m, void *key, void *val) {
