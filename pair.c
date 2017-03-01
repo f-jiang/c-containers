@@ -11,8 +11,6 @@ pair *pair_init() {
 
 void pair_del(pair **p) {
     if (*p != NULL) {
-        free((*p)->key);
-        free((*p)->val);
         free(*p);
         *p = NULL;
     } 
