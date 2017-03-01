@@ -1,11 +1,9 @@
 first last -> floor ceil
-for get() fns, return ptr to container elem or value of container elem?
 for stack queue deque move include list to .h file
-omap: upper and lower key fns
 oset omap: fns and header file prototypes same order
-pair type should have key and val sizes?
 rename the get_count fns to size (also do for other containers)
 for get-esque fns, return value, ptr or const ptr?
+key val params to pair_init()?
 
 FOR ALL:
 - NULL container causes crash
