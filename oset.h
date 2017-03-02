@@ -13,12 +13,12 @@ size_t oset_get_count(const oset * const s);
 
 bool oset_insert(oset * const s, void *val);
 bool oset_remove(oset * const s, void *val);
+bool oset_contains(const oset * const s, void *val);
+
 void *oset_floor(const oset * const s);
 void *oset_ceil(const oset * const s);
 void *oset_lower(const oset * const s, void *val);
 void *oset_higher(const oset * const s, void *val);
-
-bool oset_contains(const oset * const s, void *val);
 
 oset *oset_union(const oset * const a, const oset * const b);
 oset *oset_intxn(const oset * const a, const oset * const b);

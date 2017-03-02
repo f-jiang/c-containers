@@ -235,6 +235,23 @@ size_t omap_get_count(const omap * const m) {
     return m->count;
 }
 
+void *omap_get(omap * const m, void *key) {
+    struct node_t *n = get_node(m, m->data, key);
+    return (n == NULL) ? NULL : n->val;
+}
+
+bool omap_insert(omap * const m, void *key, void *val) {
+    return add_node(m, m->data, key, val);
+}
+
+bool omap_remove(omap * const m, void *key) {
+    return remove_node(m, m->data, key);
+}
+
+bool omap_contains(const omap * const m, void *key) {
+    return get_node(m, m->data, key) != NULL;
+}
+
 pair *omap_floor(const omap * const m) {
     struct node_t *floor = get_floor_node(m->data);
     struct pair_t *p = NULL;
@@ -305,22 +322,5 @@ void *omap_lower_key(const omap * const m, void *key) {
 void *omap_higher_key(const omap * const m, void *key) {
     struct node_t *hi = get_higher_node(m, key);
     return (hi == NULL) ? NULL : hi->key;
-}
-
-bool omap_insert(omap * const m, void *key, void *val) {
-    return add_node(m, m->data, key, val);
-}
-
-bool omap_remove(omap * const m, void *key) {
-    return remove_node(m, m->data, key);
-}
-
-void *omap_get(omap * const m, void *key) {
-    struct node_t *n = get_node(m, m->data, key);
-    return (n == NULL) ? NULL : n->val;
-}
-
-bool omap_contains(const omap * const m, void *key) {
-    return get_node(m, m->data, key) != NULL;
 }
 

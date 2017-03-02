@@ -183,6 +183,18 @@ size_t oset_get_count(const oset * const s) {
     return s->count;
 }
 
+bool oset_insert(oset * const s, void *val) {
+    return add_node(s, s->data, val);
+}
+
+bool oset_remove(oset * const s, void *val) {
+    return remove_node(s, s->data, val);
+}
+
+bool oset_contains(const oset * const s, void *val) {
+    return get_node(s, s->data, val) != NULL;
+}
+
 void *oset_floor(const oset * const s) {
     struct node_t *floor = get_floor_node(s->data);
     return (floor == NULL) ? NULL : floor->val; 
@@ -231,18 +243,6 @@ void *oset_higher(const oset * const s, void *val) {
     }
 
     return (hi == NULL) ? NULL : hi->val;
-}
-
-bool oset_insert(oset * const s, void *val) {
-    return add_node(s, s->data, val);
-}
-
-bool oset_remove(oset * const s, void *val) {
-    return remove_node(s, s->data, val);
-}
-
-bool oset_contains(const oset * const s, void *val) {
-    return get_node(s, s->data, val) != NULL;
 }
 
 oset *oset_union(const oset * const a, const oset * const b) {
