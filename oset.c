@@ -54,19 +54,19 @@ static struct node_t *get_node(const oset * const s, struct node_t *root, void *
     }
 }
 
-static struct node_t *get_min_node(struct node_t *root) {
+static struct node_t *get_floor_node(struct node_t *root) {
     if (root == NULL || root->left == NULL) {
         return root;
     } else {
-        return get_min_node(root->left);
+        return get_floor_node(root->left);
     }
 }
 
-static struct node_t *get_max_node(struct node_t *root) {
+static struct node_t *get_ceil_node(struct node_t *root) {
     if (root == NULL || root->right== NULL) {
         return root;
     } else {
-        return get_max_node(root->right);
+        return get_ceil_node(root->right);
     }
 }
 
@@ -153,11 +153,11 @@ static bool remove_node(oset * const s, struct node_t *root, void *val) {
         s->count--;
         return true;
     } else {    // two children
-        struct node_t *min = get_min_node(remove->right);
+        struct node_t *floor = get_floor_node(remove->right);
         void *temp = malloc(s->elem_size);
-        memcpy(temp, min->val, s->elem_size);
-        remove_node(s, remove->right, min->val);
-        memcpy(min->val, temp, s->elem_size);
+        memcpy(temp, floor->val, s->elem_size);
+        remove_node(s, remove->right, floor->val);
+        memcpy(floor->val, temp, s->elem_size);
         free(temp);
     }
 }
@@ -183,54 +183,54 @@ size_t oset_get_count(const oset * const s) {
     return s->count;
 }
 
-void *oset_first(const oset * const s) {
-    struct node_t *first = get_min_node(s->data);
-    return (first == NULL) ? NULL : first->val; 
+void *oset_floor(const oset * const s) {
+    struct node_t *floor = get_floor_node(s->data);
+    return (floor == NULL) ? NULL : floor->val; 
 }
 
-void *oset_last(const oset * const s) {
-    struct node_t *last = get_max_node(s->data);
-    return (last == NULL) ? NULL : last->val; 
+void *oset_ceil(const oset * const s) {
+    struct node_t *ceil = get_ceil_node(s->data);
+    return (ceil == NULL) ? NULL : ceil->val; 
 }
 
 void *oset_lower(const oset * const s, void *val) {
     struct node_t *n = get_node(s, s->data, val);
-    struct node_t *pr;
+    struct node_t *lo;
 
-    if (n == get_min_node(s->data)) {
-        pr = NULL;
+    if (n == get_floor_node(s->data)) {
+        lo = NULL;
     } else if (n->left == NULL) {
         bool done = false;
         do {
-            pr = n->parent;
-            done = (n == pr->right);
-            n = pr;
+            lo = n->parent;
+            done = (n == lo->right);
+            n = lo;
         } while (!done);
     } else {
-        pr = get_max_node(n->left);
+        lo = get_ceil_node(n->left);
     }
 
-    return (pr == NULL) ? NULL : pr->val;
+    return (lo == NULL) ? NULL : lo->val;
 }
 
 void *oset_higher(const oset * const s, void *val) {
     struct node_t *n = get_node(s, s->data, val);
-    struct node_t *sc;
+    struct node_t *hi;
 
-    if (n == get_max_node(s->data)) {
-        sc = NULL;
+    if (n == get_ceil_node(s->data)) {
+        hi = NULL;
     } else if (n->right == NULL) {
         bool done = false;
         do {
-            sc = n->parent;
-            done = (n == sc->left);
-            n = sc;
+            hi = n->parent;
+            done = (n == hi->left);
+            n = hi;
         } while (!done);
     } else {
-        sc = get_min_node(n->right);
+        hi = get_floor_node(n->right);
     }
 
-    return (sc == NULL) ? NULL : sc->val;
+    return (hi == NULL) ? NULL : hi->val;
 }
 
 bool oset_insert(oset * const s, void *val) {
@@ -250,13 +250,13 @@ oset *oset_union(const oset * const a, const oset * const b) {
     void *cur;
     size_t i;
 
-    cur = oset_first(a);
+    cur = oset_floor(a);
     for (i = 0; i < a->count; i++) {
         oset_insert(result, cur);
         cur = oset_higher(a, cur);
     }
 
-    cur = oset_first(b);
+    cur = oset_floor(b);
     for (i = 0; i < b->count; i++) {
         oset_insert(result, cur);
         cur = oset_higher(b, cur);
@@ -277,7 +277,7 @@ oset *oset_intxn(const oset * const a, const oset * const b) {
         other = a;
     }
 
-    void *cur = oset_first(base);
+    void *cur = oset_floor(base);
     size_t i;
     for (i = 0; i < base->count; i++) {
         if (oset_contains(other, cur)) {
@@ -292,7 +292,7 @@ oset *oset_intxn(const oset * const a, const oset * const b) {
 oset *oset_diff(const oset * const a, const oset * const b) {
     struct ordered_set_t *result = oset_init(a->elem_size, a->comp);
 
-    void *cur = oset_first(a);
+    void *cur = oset_floor(a);
     size_t i;
     for (i = 0; i < a->count; i++) {
         if (!oset_contains(b, cur)) {

@@ -13,8 +13,8 @@ size_t oset_get_count(const oset * const s);
 
 bool oset_insert(oset * const s, void *val);
 bool oset_remove(oset * const s, void *val);
-void *oset_first(const oset * const s);
-void *oset_last(const oset * const s);
+void *oset_floor(const oset * const s);
+void *oset_ceil(const oset * const s);
 void *oset_lower(const oset * const s, void *val);
 void *oset_higher(const oset * const s, void *val);
 
