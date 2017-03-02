@@ -1,9 +1,6 @@
-first last -> floor ceil
-for stack queue deque move include list to .h file
-oset omap: fns and header file prototypes same order
-rename the get_count fns to size (also do for other containers)
 for get-esque fns, return value, ptr or const ptr?
 key val params to pair_init()?
+more funcs for array and vector
 
 FOR ALL:
 - NULL container causes crash
