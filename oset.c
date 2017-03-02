@@ -9,7 +9,7 @@ struct node_t {
 };
 
 struct ordered_set_t {
-    size_t count;
+    size_t size;
     size_t elem_size;
     struct node_t *data;
 
@@ -71,15 +71,15 @@ static struct node_t *get_ceil_node(struct node_t *root) {
 }
 
 static bool add_node(oset * const s, struct node_t *root, void *val) {
-    if (s->count == 0) {
+    if (s->size == 0) {
         s->data = node_init(s, val);
-        s->count = 1;
+        s->size = 1;
         return true;
     } else if ((*s->comp)(root->val, val) > 0) {
         if (root->left == NULL) {
             root->left = node_init(s, val);
             root->left->parent = root;
-            s->count++;
+            s->size++;
             return true;
         } else {
             add_node(s, root->left, val);
@@ -88,7 +88,7 @@ static bool add_node(oset * const s, struct node_t *root, void *val) {
         if (root->right == NULL) {
             root->right = node_init(s, val);
             root->right->parent = root;
-            s->count++;
+            s->size++;
             return true;
         } else {
             add_node(s, root->right, val);
@@ -116,7 +116,7 @@ static bool remove_node(oset * const s, struct node_t *root, void *val) {
         }
 
         node_del(remove);
-        s->count--;
+        s->size--;
         return true;
     } else if (remove->right == NULL) {    // only has left child
         if (parent == NULL) {
@@ -133,7 +133,7 @@ static bool remove_node(oset * const s, struct node_t *root, void *val) {
         }
 
         node_del(remove);
-        s->count--;
+        s->size--;
         return true;
     } else if (remove->left == NULL) {    // only has right child
         if (parent == NULL) {
@@ -150,7 +150,7 @@ static bool remove_node(oset * const s, struct node_t *root, void *val) {
         }
 
         node_del(remove);
-        s->count--;
+        s->size--;
         return true;
     } else {    // two children
         struct node_t *floor = get_floor_node(remove->right);
@@ -164,7 +164,7 @@ static bool remove_node(oset * const s, struct node_t *root, void *val) {
 
 oset *oset_init(size_t elem_size, int (*comp)(void *a, void *b)) {
     struct ordered_set_t *s = malloc(sizeof(*s));
-    s->count = 0;
+    s->size = 0;
     s->elem_size = elem_size;
     s->data = NULL;
     s->comp = comp;
@@ -179,8 +179,8 @@ void oset_del(oset **s) {
     }
 }
 
-size_t oset_get_count(const oset * const s) {
-    return s->count;
+size_t oset_size(const oset * const s) {
+    return s->size;
 }
 
 bool oset_insert(oset * const s, void *val) {
@@ -251,13 +251,13 @@ oset *oset_union(const oset * const a, const oset * const b) {
     size_t i;
 
     cur = oset_floor(a);
-    for (i = 0; i < a->count; i++) {
+    for (i = 0; i < a->size; i++) {
         oset_insert(result, cur);
         cur = oset_higher(a, cur);
     }
 
     cur = oset_floor(b);
-    for (i = 0; i < b->count; i++) {
+    for (i = 0; i < b->size; i++) {
         oset_insert(result, cur);
         cur = oset_higher(b, cur);
     }
@@ -269,7 +269,7 @@ oset *oset_intxn(const oset * const a, const oset * const b) {
     struct ordered_set_t *result = oset_init(a->elem_size, a->comp);
     const struct ordered_set_t *base, *other;
 
-    if (a->count < b->count) {
+    if (a->size < b->size) {
         base = a;
         other = b;
     } else {
@@ -279,7 +279,7 @@ oset *oset_intxn(const oset * const a, const oset * const b) {
 
     void *cur = oset_floor(base);
     size_t i;
-    for (i = 0; i < base->count; i++) {
+    for (i = 0; i < base->size; i++) {
         if (oset_contains(other, cur)) {
             oset_insert(result, cur);
         }
@@ -294,7 +294,7 @@ oset *oset_diff(const oset * const a, const oset * const b) {
 
     void *cur = oset_floor(a);
     size_t i;
-    for (i = 0; i < a->count; i++) {
+    for (i = 0; i < a->size; i++) {
         if (!oset_contains(b, cur)) {
             oset_insert(result, cur);
         }

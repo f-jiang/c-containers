@@ -9,7 +9,7 @@ struct node_t {
 };
 
 struct ordered_map_t {
-    size_t count;
+    size_t size;
     size_t key_size, val_size;
     struct node_t *data;
 
@@ -117,15 +117,15 @@ static struct node_t *get_higher_node(const omap * const m, void *key) {
 }
 
 static bool add_node(omap * const m, struct node_t *root, void *key, void *val) {
-    if (m->count == 0) {
+    if (m->size == 0) {
         m->data = node_init(m, key, val);
-        m->count = 1;
+        m->size = 1;
         return true;
     } else if ((*m->comp)(root->key, key) > 0) {
         if (root->left == NULL) {
             root->left = node_init(m, key, val);
             root->left->parent = root;
-            m->count++;
+            m->size++;
             return true;
         } else {
             add_node(m, root->left, key, val);
@@ -134,7 +134,7 @@ static bool add_node(omap * const m, struct node_t *root, void *key, void *val) 
         if (root->right == NULL) {
             root->right = node_init(m, key, val);
             root->right->parent = root;
-            m->count++;
+            m->size++;
             return true;
         } else {
             add_node(m, root->right, key, val);
@@ -162,7 +162,7 @@ static bool remove_node(omap * const m, struct node_t *root, void *key) {
         }
 
         node_del(remove);
-        m->count--;
+        m->size--;
         return true;
     } else if (remove->right == NULL) {    // only has left child
         if (parent == NULL) {
@@ -179,7 +179,7 @@ static bool remove_node(omap * const m, struct node_t *root, void *key) {
         }
 
         node_del(remove);
-        m->count--;
+        m->size--;
         return true;
     } else if (remove->left == NULL) {    // only has right child
         if (parent == NULL) {
@@ -196,7 +196,7 @@ static bool remove_node(omap * const m, struct node_t *root, void *key) {
         }
 
         node_del(remove);
-        m->count--;
+        m->size--;
         return true;
     } else {    // two children
         struct node_t *floor = get_floor_node(remove->right);
@@ -215,7 +215,7 @@ static bool remove_node(omap * const m, struct node_t *root, void *key) {
 
 omap *omap_init(size_t key_size, size_t val_size, int (*comp)(void *a, void *b)) {
     struct ordered_map_t *m = malloc(sizeof(*m));
-    m->count = 0;
+    m->size = 0;
     m->key_size = key_size;
     m->val_size = val_size;
     m->data = NULL;
@@ -231,8 +231,8 @@ void omap_del(omap **m) {
     }
 }
 
-size_t omap_get_count(const omap * const m) {
-    return m->count;
+size_t omap_size(const omap * const m) {
+    return m->size;
 }
 
 void *omap_get(omap * const m, void *key) {

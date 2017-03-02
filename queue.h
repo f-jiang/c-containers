@@ -8,7 +8,7 @@ typedef list queue;
 queue *queue_init(size_t elem_size);
 void queue_del(queue **q);
 
-size_t queue_get_len(const queue * const q);
+size_t queue_size(const queue * const q);
 
 void *queue_front(const queue * const q);
 void *queue_back(const queue * const q);

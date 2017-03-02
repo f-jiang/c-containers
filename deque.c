@@ -9,8 +9,8 @@ void deque_del(deque **d) {
     list_del(d);
 }
 
-size_t deque_get_len(const deque * const d) {
-    return list_get_len(d);
+size_t deque_size(const deque * const d) {
+    return list_size(d);
 }
 
 void *deque_front(const deque * const d) {

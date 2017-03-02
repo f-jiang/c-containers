@@ -8,7 +8,7 @@ typedef list deque;
 deque *deque_init(size_t elem_size);
 void deque_del(deque **d);
 
-size_t deque_get_len(const deque * const d);
+size_t deque_size(const deque * const d);
 
 void *deque_front(const deque * const d);
 void *deque_back(const deque * const d);

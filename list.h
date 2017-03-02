@@ -8,7 +8,7 @@ typedef struct linked_list_t list;
 list *list_init(size_t elem_size);
 void list_del(list **l);
 
-size_t list_get_len(const list * const l);
+size_t list_size(const list * const l);
 
 void list_set(list * const l, size_t index, void *val);
 void *list_get(const list * const l, size_t index);

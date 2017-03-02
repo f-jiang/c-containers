@@ -8,7 +8,7 @@ typedef list stack;
 stack *stack_init(size_t elem_size);
 void stack_del(stack **s);
 
-size_t stack_get_len(const stack * const s);
+size_t stack_size(const stack * const s);
 
 void *stack_top(const stack * const s);
 

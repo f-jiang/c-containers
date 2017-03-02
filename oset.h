@@ -9,7 +9,7 @@ typedef struct ordered_set_t oset;
 oset *oset_init(size_t elem_size, int (*comp)(void *a, void *b));
 void oset_del(oset **s);
 
-size_t oset_get_count(const oset * const s);
+size_t oset_size(const oset * const s);
 
 bool oset_insert(oset * const s, void *val);
 bool oset_remove(oset * const s, void *val);

@@ -9,8 +9,8 @@ void stack_del(stack **s) {
     list_del(s);
 }
 
-size_t stack_get_len(const stack * const s) {
-    return list_get_len(s);
+size_t stack_size(const stack * const s) {
+    return list_size(s);
 }
 
 void *stack_top(const stack * const s) {

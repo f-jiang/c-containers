@@ -9,8 +9,8 @@ void queue_del(queue **q) {
     list_del(q);
 }
 
-size_t queue_get_len(const queue * const q) {
-    return list_get_len(q);
+size_t queue_size(const queue * const q) {
+    return list_size(q);
 }
 
 void *queue_front(const queue * const q) {
