@@ -1,4 +1,3 @@
-#include "list.h"
 #include "stack.h"
 
 stack *stack_init(size_t elem_size) {

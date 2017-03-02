@@ -1,4 +1,3 @@
-#include "list.h"
 #include "queue.h"
 
 queue *queue_init(size_t elem_size) {

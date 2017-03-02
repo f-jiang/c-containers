@@ -1,4 +1,3 @@
-#include "list.h"
 #include "deque.h"
 
 deque *deque_init(size_t elem_size) {

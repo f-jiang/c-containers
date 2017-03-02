@@ -3,6 +3,8 @@
 
 #include <stddef.h>     // size_t
 
+#include "list.h"
+
 typedef list stack;
 
 stack *stack_init(size_t elem_size);
